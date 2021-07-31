@@ -1,0 +1,1 @@
+module.exports = (api, reducer, ipcMain) => api.then(data => reducer(data, ipcMain)).catch(err => reducer(err, ipcMain))

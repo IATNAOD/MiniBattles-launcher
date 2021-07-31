@@ -1,0 +1,70 @@
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.app-layout {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  height: 26px;
+  background-color: #202225;
+  -webkit-app-region: drag;
+  display: flex;
+  flex-direction: row-reverse;
+  position: relative;
+}
+
+.header .title {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-app-region: no-drag;
+  height: calc(100% - 6px);
+  display: flex;
+  align-items: center;
+  padding: 3px 10px;
+}
+
+.header .title .name {
+  color: #fff;
+  font-size: 16px;
+}
+
+.header .title .version {
+  color: #ffffff80;
+  margin-left: 10px;
+  font-size: 14px;
+}
+
+.header .btn-hdr {
+  position: relative;
+  cursor: pointer;
+  width: 28px;
+  height: 26px;
+  pointer-events: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-app-region: no-drag;
+}
+
+.header .btn-hdr.button-close:hover {
+  color: #fff;
+  background: #de4a4a;
+}
+
+.header .btn-hdr.button-max:hover {
+  color: #fff;
+  background: rgba(79, 84, 92, 0.16);
+}
+
+.header .btn-hdr.button-min:hover {
+  color: #fff;
+  background: rgba(79, 84, 92, 0.16);
+}
