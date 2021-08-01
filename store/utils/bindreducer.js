@@ -1,1 +1,1 @@
-module.exports = (api, reducer, ipcMain) => api.then(data => reducer(data, ipcMain)).catch(err => reducer(err, ipcMain))
+module.exports = (api, reducer, mainWindow) => api.then(data => reducer(data, mainWindow)).catch(err => reducer(err, mainWindow))

@@ -1,6 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Switch, Redirect } from 'react-router';
 import { HashRouter } from 'react-router-dom';
+
+import storage from 'electron-json-storage'
+
+import { ipcRenderer } from 'electron'
+import { CURRENT } from '../../../store/actions/user';
 
 import Header from '../Header';
 import HomePage from '../../pages/Home';
@@ -13,6 +18,54 @@ const RestrictAccessRoute = ({ exact, path, render, forAuth = true, auth, to }) 
 export default ({
 
 }) => {
+  const [User, UserChange] = useState(null)
+
+  useEffect(() => {
+
+    if (!User) {
+      let localUser = storage.getSync('user');
+
+      if (localUser.token)
+        ipcRenderer.send(CURRENT, localUser.token)
+    }
+
+    ipcRenderer.on(CURRENT, (e, data) => {
+      if (data.data && data.data.success)
+        storage.set('user', { ...storage.getSync('user'), ...data.data.user }, function (error) {
+
+          if (error)
+            throw error;
+          else
+            UserChange(storage.getSync('user'))
+
+        });
+      else
+        storage.remove('user')
+    })
+
+    return () => {
+
+      ipcRenderer.removeListener(CURRENT, (e, data) => {
+        if (data.data && data.data.success)
+          storage.set('user', { ...storage.getSync('user'), ...data.data.user }, function (error) {
+
+            if (error)
+              throw error;
+            else
+              UserChange(storage.getSync('user'))
+
+          });
+        else
+          storage.remove('user')
+      })
+
+    }
+
+  }, [])
+
+  useEffect(() => {
+    console.log(User)
+  }, [User])
 
   return (
     <div className="app-layout">
@@ -21,9 +74,9 @@ export default ({
 
       <HashRouter>
         <Switch>
-          <RestrictAccessRoute exact={true} path="/" render={() => <HomePage />} forAuth={true} auth={false} to={'/login'} />
-          <RestrictAccessRoute exact={true} path="/login" render={() => <LoginPage />} forAuth={false} auth={false} to={'/'} />
-          <RestrictAccessRoute exact={true} path="/registration" render={() => <RegistrationPage />} forAuth={false} auth={false} to={'/'} />
+          <RestrictAccessRoute exact={true} path="/" render={() => <HomePage />} forAuth={true} auth={User} to={'/login'} />
+          <RestrictAccessRoute exact={true} path="/login" render={() => <LoginPage />} forAuth={false} auth={User} to={'/'} />
+          <RestrictAccessRoute exact={true} path="/registration" render={() => <RegistrationPage />} forAuth={false} auth={User} to={'/'} />
 
           <Route render={() => <NotFoundPage />} />
         </Switch>

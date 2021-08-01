@@ -28,7 +28,18 @@ module.exports = {
       },
       {
         test: /\.jsx?$/,
-        use: [{ loader: 'babel-loader' }],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [[
+              '@babel/preset-env', {
+                targets: {
+                  esmodules: true
+                }
+              }],
+              "@babel/preset-react"]
+          }
+        },
         include: defaultInclude
       },
       {

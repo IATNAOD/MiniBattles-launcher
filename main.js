@@ -20,7 +20,8 @@ function createWindow() {
     minWidth: 1200,
     minHeight: 700,
     frame: false,
-    show: false
+    show: false,
+
   });
 
   // and load the index.html of the app.
@@ -43,6 +44,8 @@ function createWindow() {
 
     mainWindow.show();
 
+    require('./store')(ipcMain, mainWindow)
+
     if (dev)
       mainWindow.webContents.openDevTools();
 
@@ -55,7 +58,9 @@ function createWindow() {
   });
 }
 
-app.on('ready', createWindow);
+app.on('ready', () => {
+  createWindow()
+});
 
 app.on('window-all-closed', () => {
 

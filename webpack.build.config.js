@@ -1,8 +1,9 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const BabiliPlugin = require('babili-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+
+const helpers = require('./config/helpers')
 
 // Config directories
 const SRC_DIR = path.resolve(__dirname, 'src');
@@ -30,7 +31,18 @@ module.exports = {
       },
       {
         test: /\.jsx?$/,
-        use: [{ loader: 'babel-loader' }],
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [[
+              '@babel/preset-env', {
+                targets: {
+                  esmodules: true
+                }
+              }],
+              "@babel/preset-react"]
+          }
+        },
         include: defaultInclude
       },
       {
@@ -47,12 +59,14 @@ module.exports = {
   },
   target: 'electron-renderer',
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      template: helpers.root('public/index.html'),
+      inject: 'body'
+    }),
     new ExtractTextPlugin('bundle.css'),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
-    }),
-    new BabiliPlugin()
+    })
   ],
   stats: {
     colors: true,
