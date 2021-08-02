@@ -32,13 +32,18 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.12.1",
+    "adm-zip": "^0.5.5",
     "axios": "^0.21.1",
+    "directory-tree": "^2.2.9",
+    "electron-json-storage": "^4.3.0",
+    "hash-file": "^3.0.0",
+    "hash-files": "^1.1.1",
+    "node-notifier": "^10.0.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-dom": "^16.8.6",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
-    "node-notifier": "^10.0.0",
-    "electron-json-storage": "^4.3.0"
+    "request": "^2.88.2"
   }
 }

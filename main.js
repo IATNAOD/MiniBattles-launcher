@@ -1,30 +1,55 @@
 const { app, ipcMain, BrowserWindow } = require('electron');
 const path = require('path')
-const url = require('url')
-const { HANDLE_FETCH_DATA, FETCH_DATA_FROM_STORAGE, HANDLE_SAVE_DATA, SAVE_DATA_IN_STORAGE, REMOVE_DATA_FROM_STORAGE, HANDLE_REMOVE_DATA } = require("./utils/constants")
-const storage = require("electron-json-storage")
+const url = require('url');
 
-let mainWindow, itemsToTrack, dev = false;
+let mainWindow, updaterWindow, dev = false;
 
 if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
   dev = true;
 }
 
-const defaultDataPath = storage.getDefaultDataPath();
+function createUpdaterWindow() {
 
-function createWindow() {
+  updaterWindow = new BrowserWindow({
+    height: 200,
+    width: 600,
+    frame: false,
+    maximizable: false,
+    minimizable: false,
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true
+    }
+  });
 
+  let indexPath = url.format({
+    protocol: 'file:',
+    pathname: path.join(__dirname, 'updater', 'index.html'),
+    slashes: true
+  });
+
+  updaterWindow.once('ready-to-show', () => {
+    updaterWindow.show();
+  });
+
+  updaterWindow.loadURL(indexPath);
+
+  updaterWindow.on('closed', function () {
+    updaterWindow = null;
+  });
+}
+
+function createMainWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 700,
     minWidth: 1200,
     minHeight: 700,
     frame: false,
-    show: false,
-
+    show: false
   });
 
-  // and load the index.html of the app.
   let indexPath = url.format(dev && process.argv.indexOf('--noDevServer') === -1
     ? {
       protocol: 'http:',
@@ -40,7 +65,14 @@ function createWindow() {
 
   mainWindow.loadURL(indexPath);
 
+  mainWindow.on('closed', function () {
+    mainWindow = null;
+  });
+
   mainWindow.once('ready-to-show', () => {
+
+    if (updaterWindow)
+      updaterWindow.destroy()
 
     mainWindow.show();
 
@@ -50,16 +82,13 @@ function createWindow() {
       mainWindow.webContents.openDevTools();
 
   });
-
-  mainWindow.webContents.send("info", { msg: "hello from main process" })
-
-  mainWindow.on('closed', function () {
-    mainWindow = null;
-  });
 }
 
 app.on('ready', () => {
-  createWindow()
+  if (dev)
+    createMainWindow()
+  else
+    createUpdaterWindow()
 });
 
 app.on('window-all-closed', () => {
@@ -72,79 +101,20 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
 
   if (mainWindow === null)
-    createWindow();
+    if (dev)
+      createMainWindow()
+    else
+      createUpdaterWindow
 
 });
 
-// --------------------------------------------------------------
-
-// ipcMain methods are how we interact between the window and (this) main program
-
-// Receives a FETCH_DATA_FROM_STORAGE from renderer
-ipcMain.on(FETCH_DATA_FROM_STORAGE, (event, message) => {
-  console.log("Main received: FETCH_DATA_FROM_STORAGE with message:", message)
-  // Get the user's itemsToTrack from storage
-  // For our purposes, message = itemsToTrack array
-  storage.get(message, (error, data) => {
-    // if the itemsToTrack key does not yet exist in storage, data returns an empty object, so we will declare itemsToTrack to be an empty array
-    itemsToTrack = JSON.stringify(data) === '{}' ? [] : data;
-    if (error) {
-      mainWindow.send(HANDLE_FETCH_DATA, {
-        success: false,
-        message: "itemsToTrack not returned",
-      })
-    } else {
-      // Send message back to window
-      mainWindow.send(HANDLE_FETCH_DATA, {
-        success: true,
-        message: itemsToTrack, // do something with the data
-      })
-    }
-  })
-})
-
-// Receive a SAVE_DATA_IN_STORAGE call from renderer
-ipcMain.on(SAVE_DATA_IN_STORAGE, (event, message) => {
-  console.log("Main received: SAVE_DATA_IN_STORAGE")
-  // update the itemsToTrack array.
-  itemsToTrack.push(message)
-  // Save itemsToTrack to storage
-  storage.set("itemsToTrack", itemsToTrack, (error) => {
-    if (error) {
-      console.log("We errored! What was data?")
-      mainWindow.send(HANDLE_SAVE_DATA, {
-        success: false,
-        message: "itemsToTrack not saved",
-      })
-    } else {
-      // Send message back to window as 2nd arg "data"
-      mainWindow.send(HANDLE_SAVE_DATA, {
-        success: true,
-        message: message,
-      })
-    }
-  })
+ipcMain.on('relaunch-main-app', (e) => {
+  app.relaunch()
+  app.exit()
 });
 
-// Receive a REMOVE_DATA_FROM_STORAGE call from renderer
-ipcMain.on(REMOVE_DATA_FROM_STORAGE, (event, message) => {
-  console.log('Main Received: REMOVE_DATA_FROM_STORAGE')
-  // Update the items to Track array.
-  itemsToTrack = itemsToTrack.filter(item => item !== message)
-  // Save itemsToTrack to storage
-  storage.set("itemsToTrack", itemsToTrack, (error) => {
-    if (error) {
-      console.log("We errored! What was data?")
-      mainWindow.send(HANDLE_REMOVE_DATA, {
-        success: false,
-        message: "itemsToTrack not saved",
-      })
-    } else {
-      // Send new updated array to window as 2nd arg "data"
-      mainWindow.send(HANDLE_REMOVE_DATA, {
-        success: true,
-        message: itemsToTrack,
-      })
-    }
-  })
+ipcMain.on('start-main-app', (e) => {
+
+  createMainWindow()
+
 })
