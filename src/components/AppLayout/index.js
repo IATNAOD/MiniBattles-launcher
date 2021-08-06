@@ -30,6 +30,7 @@ export default ({
     }
 
     ipcRenderer.on(CURRENT, (e, data) => {
+
       if (data.data && data.data.success)
         storage.set('user', { ...storage.getSync('user'), ...data.data.user }, function (error) {
 
@@ -63,10 +64,6 @@ export default ({
 
   }, [])
 
-  useEffect(() => {
-    console.log(User)
-  }, [User])
-
   return (
     <div className="app-layout">
 
@@ -74,7 +71,7 @@ export default ({
 
       <HashRouter>
         <Switch>
-          <RestrictAccessRoute exact={true} path="/" render={() => <HomePage />} forAuth={true} auth={User} to={'/login'} />
+          <RestrictAccessRoute exact={true} path="/" render={() => <HomePage User={User} />} forAuth={true} auth={User} to={'/login'} />
           <RestrictAccessRoute exact={true} path="/login" render={() => <LoginPage />} forAuth={false} auth={User} to={'/'} />
           <RestrictAccessRoute exact={true} path="/registration" render={() => <RegistrationPage />} forAuth={false} auth={User} to={'/'} />
 

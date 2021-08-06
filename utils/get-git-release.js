@@ -30,7 +30,7 @@ function sendDownloadRequest(options, params, callback) {
       if (asset) {
 
         params.label.innerText = 'Downloading an update';
-        progress.max = asset.size;
+        params.progress.max = asset.size;
 
         if (!fs.existsSync(params.saveDirectory))
           fs.mkdirSync(params.saveDirectory);
@@ -41,10 +41,12 @@ function sendDownloadRequest(options, params, callback) {
         const stream = request(options).pipe(fs.createWriteStream(savePath));
 
         let streamInterval = setInterval(() => {
-          progress.value = stream.bytesWritten;
+          params.progress.value = stream.bytesWritten;
         }, 1000)
         stream.on('finish', function () {
           callback(null, savePath);
+          params.progress.max = 100;
+          params.progress.value = 100;
           clearInterval(streamInterval)
         });
         stream.on('error', function (e) {

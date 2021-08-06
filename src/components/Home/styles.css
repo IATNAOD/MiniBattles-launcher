@@ -1,0 +1,194 @@
+.home-wrapper {
+  background-color: #2f3136;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: flex-end;
+  padding: 35px;
+}
+
+.home-wrapper .home-banner {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1.5fr 1fr;
+}
+
+.home-wrapper .home-banner .game-title {
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.home-wrapper .home-banner .game-img-news {
+  grid-column-start: 1;
+  grid-row-start: 2;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.home-wrapper .home-banner .game-events {
+  grid-column-start: 1;
+  grid-row-start: 3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+}
+
+.home-wrapper .home-banner .game-info {
+  grid-column-start: 2;
+  grid-row-start: 3;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.home-wrapper .home-control {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-wrapper .download-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-wrapper .home-control .download-progress {
+  flex: 1;
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .download-progress::-webkit-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .download-progress::-webkit-progress-value {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .download-progress::-moz-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.home-wrapper .home-control .btn.download-action {
+  font-family: "sans-serif";
+  font-size: 30px;
+  color: #986403;
+  padding: 15px 50px;
+  border: 0;
+  background: #ffd642;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.home-wrapper .update-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-wrapper .home-control .update-progress {
+  flex: 1;
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .update-progress::-webkit-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .update-progress::-webkit-progress-value {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .update-progress::-moz-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.home-wrapper .home-control .btn.update-action {
+  font-family: "sans-serif";
+  font-size: 30px;
+  color: #986403;
+  padding: 15px 50px;
+  border: 0;
+  background: #ffd642;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+}
+
+.home-wrapper .check-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.home-wrapper .home-control .check-progress {
+  flex: 1;
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .check-progress::-webkit-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .check-progress::-webkit-progress-value {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+.home-wrapper .home-control .check-progress::-moz-progress-bar {
+  border: 0;
+  height: 40px;
+  border-radius: 20px;
+}
+
+.home-wrapper .home-control .btn.check-action {
+  font-family: "sans-serif";
+  font-size: 30px;
+  color: #986403;
+  padding: 15px 50px;
+  border: 0;
+  background: #ffd642;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.home-wrapper .play-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.home-wrapper .home-control .btn.play-action {
+  font-family: "sans-serif";
+  font-size: 30px;
+  color: #986403;
+  padding: 15px 50px;
+  border: 0;
+  background: #ffd642;
+  border-radius: 5px;
+  margin: 10px;
+  cursor: pointer;
+}

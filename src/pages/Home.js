@@ -2,10 +2,10 @@ import React from 'react';
 
 import HomeComponent from '../components/Home';
 
-export default ({ }) => {
+export default ({ User }) => {
 
   return (
-    <HomeComponent />
+    <HomeComponent User={User} />
   );
 
 };

@@ -11,7 +11,7 @@ export default ({
 }) => {
 
   const clsoeWindow = () => {
-    CurrentMainWindow.close();
+    CurrentMainWindow.hide();
   }
 
   const maximizeWindow = () => {

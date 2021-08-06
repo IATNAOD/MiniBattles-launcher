@@ -1,8 +1,9 @@
-const { app, ipcMain, BrowserWindow } = require('electron');
+const { app, ipcMain, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path')
 const url = require('url');
+const GetTrayMenu = require('./utils/GetTrayMenu');
 
-let mainWindow, updaterWindow, dev = false;
+let mainWindow, tray, updaterWindow, dev = false;
 
 if (process.defaultApp || /[\\/]electron-prebuilt[\\/]/.test(process.execPath) || /[\\/]electron[\\/]/.test(process.execPath)) {
   dev = true;
@@ -42,10 +43,10 @@ function createUpdaterWindow() {
 
 function createMainWindow() {
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 700,
-    minWidth: 1200,
-    minHeight: 700,
+    width: 1280,
+    height: 720,
+    minWidth: 1280,
+    minHeight: 720,
     frame: false,
     show: false
   });
@@ -63,6 +64,8 @@ function createMainWindow() {
       slashes: true
     });
 
+  require('./store')(ipcMain, mainWindow)
+
   mainWindow.loadURL(indexPath);
 
   mainWindow.on('closed', function () {
@@ -76,7 +79,14 @@ function createMainWindow() {
 
     mainWindow.show();
 
-    require('./store')(ipcMain, mainWindow)
+    tray = new Tray('tray-icon.ico')
+
+    tray.on('click', () => {
+      if (!mainWindow.isVisible())
+        mainWindow.show()
+    })
+
+    tray.setContextMenu(Menu.buildFromTemplate(GetTrayMenu(mainWindow)))
 
     if (dev)
       mainWindow.webContents.openDevTools();
@@ -92,10 +102,8 @@ app.on('ready', () => {
 });
 
 app.on('window-all-closed', () => {
-
   if (process.platform !== 'darwin')
     app.quit();
-
 });
 
 app.on('activate', () => {
@@ -108,13 +116,16 @@ app.on('activate', () => {
 
 });
 
+ipcMain.on('hide-app', (e) => {
+  if (mainWindow)
+    mainWindow.hide()
+});
+
 ipcMain.on('relaunch-main-app', (e) => {
   app.relaunch()
   app.exit()
 });
 
 ipcMain.on('start-main-app', (e) => {
-
   createMainWindow()
-
 })

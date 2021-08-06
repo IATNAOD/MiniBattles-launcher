@@ -11,8 +11,6 @@ rel.getLatestRelease({
   repo: 'MiniBattles-launcher',
 }, function (error, response) {
 
-  console.log(response)
-
   if (!error && response.statusCode == 200) {
     let tag = JSON.parse(response.body).tag_name
 
@@ -31,8 +29,6 @@ rel.getLatestRelease({
           label.innerText = 'Something went wrong';
         } else {
           label.innerText = 'Update downloaded';
-          progress.max = 100;
-          progress.value = 100;
         }
 
         let zip = new AdmZip(response);

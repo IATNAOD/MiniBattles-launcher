@@ -37,7 +37,7 @@ body,
 }
 
 .header .title .version {
-  color: #ffffff80;
+  color: rgb(187, 187, 187);
   margin-left: 10px;
   font-size: 14px;
 }
